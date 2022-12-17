@@ -156,7 +156,7 @@ export class Find {
     })
   }
   // 根据选区查询
-  static async get_by_range(indexname,range,filter=()>true){
+  static async get_by_range(indexname,range,filter=()=>true){
     return new Promise((resolve,reject)=>{
       let index = store.index(indexname)
       let request = index.openCursor(range)
