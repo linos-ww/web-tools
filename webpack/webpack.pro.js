@@ -20,8 +20,11 @@ module.exports={
         }, {
             test:/\.css$/,
             use:[MiniCssExtractPlugin.loader,'css-loader']
-        }, {
-            test:/\.(js|jsx|mjs|ts|tsx)$/,
+        },  {
+            test:/.(tsx?)$/,
+            use:['ts-loader']
+        },{
+            test:/\.(js|jsx|mjs)$/,
             use:['babel-loader'],exclude:/node_modules/
         }, {
             test:/\.(png|jpg|svg|gif)$/,

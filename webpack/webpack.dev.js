@@ -6,7 +6,7 @@ const WebpackBar =require('webpackbar')
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 module.exports={
     mode:"development",
-    entry:"./src/index.js",
+    entry:"./src/index.ts",
     output:{
         path:path.resolve(__dirname,"dist"),
         filename:"[name]-[id].js"
@@ -17,10 +17,13 @@ module.exports={
             test:/\.vue$/,
             use:'vue-loader'
         }, {
+            test:/.(tsx?)$/,
+            use:['ts-loader']
+        },{
             test:/\.css$/,
             use:['style-loader','css-loader']
         }, {
-            test:/\.(js|jsx|mjs|ts|tsx)$/,
+            test:/\.(js|jsx|mjs)$/,
             use:['babel-loader'],exclude:/node_modules/
         }, {
             test:/\.(png|jpg|svg|gif)$/,

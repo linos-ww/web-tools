@@ -1,18 +1,18 @@
 
 //检测类
 export class Check{
-    static israw(obj){
+    static israw(obj:object):boolean{
         let T =typeof obj
         if(T==="object" && obj===null)return true;
         else return T!=='function'
     }
     
-    static isobj(obj){
+    static isobj(obj:object):boolean{
         if(obj===null)return false
-        else typeof obj ==='object' || typeof obj==='function'
+        else return typeof obj ==='object' || typeof obj==='function'
     }
     
-    static istype(obj, ...types){
+    static istype(obj:any, ...types:any[]):boolean{
         let T
         if(obj===null || obj===undefined)T=obj
         else T=(obj).constructor
@@ -20,9 +20,9 @@ export class Check{
         return types.some(e=>{return e.isPrototypeOf(T)});
     }
     
-    static isroot(obj){return Object.isExtensible(obj)}
+    static isroot(obj:object):boolean{return Object.isExtensible(obj)}
     
-    static validate(obj,candidate,...types){
+    static validate<U,T>(obj:U,candidate:T,...types:any[]):U|T{
         if(this.istype(obj,...types))return obj
         else return candidate
     }
@@ -73,9 +73,9 @@ export class Net{
 }
 
 // 函数通知器,包装一个函数,返回新的函数,返回的函数可以通过首参数得知自己是否是最新被调用的
-export function Rope(func){
+export function Rope(func:Function){
     let pointer
-    function f(...args){
+    function f(...args:any[]){
         let tag=Symbol()
         pointer=tag
         func(()=>tag===pointer,...args)
@@ -84,15 +84,15 @@ export function Rope(func){
 }
 
 // 数组迭代并行,类似于python的zip函数
-export function* zip(...args){
-    let list=args.map(e=>{
+export function* zip(...args:any[]){
+    let list:any[]=args.map(e=>{
         if(Array.isArray(e))return e
         else return [e]
     })
     let lens=list.map(e=>e.length)
     let min=Math.min(...lens)
     for(let index=0;index<min;index++){
-        let L=[]
+        let L:any[]=[]
         for(let pos=0;pos<list.length;pos++){
             L.push(list[pos][index])
         }
