@@ -21,7 +21,10 @@ module.exports={
             test:/\.css$/,
             use:[MiniCssExtractPlugin.loader,'css-loader']
         }, {
-            test:/\.(js|jsx|mjs|ts|tsx)$/,
+            test:/\.(tsx?)$/,
+            use:['ts-loader']
+        },{
+            test:/\.(js|jsx|mjs)$/,
             use:['babel-loader'],exclude:/node_modules/
         }, {
             test:/\.(png|jpg|svg|gif)$/,
@@ -71,7 +74,7 @@ module.exports={
         }
     },
     plugins:[
-        // new VueLoaderPlugin(),
+        new VueLoaderPlugin(),
         new MiniCssExtractPlugin({
             filename: 'css/[name].css',
         }),
@@ -81,10 +84,10 @@ module.exports={
             inject:true,                        //在temlate模板中注入脚本,
             template: "./src/index.html"        //模板文件
         }),
-        // new webpack.ProvidePlugin({
-        //     process:"process/browser",
-        //     Buffer:["buffer","Buffer"]
-        // })
+        new webpack.ProvidePlugin({
+            process:"process/browser",
+            Buffer:["buffer","Buffer"]
+        })
     ]
  
 }
