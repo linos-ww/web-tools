@@ -66,9 +66,9 @@ module.exports={
         }
     },
     resolve:{
-        // extensions:[".ts",".js",".vue","..."],
+        extensions:[".ts",".js",".vue","..."],
         // enforceExtension:true,
-        // mainFiles: ['index'],
+        mainFiles: ['index'],
         alias: {
             // '@': path.join(__dirname, "src"),
             

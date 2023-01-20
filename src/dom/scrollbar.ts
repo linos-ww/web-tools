@@ -1,25 +1,25 @@
 //可以滚动垂直的内容,但是没有滚动条
-export function scroll(selector:any,step=20){
-    // 获取DOM元素
-    let dom:any[]=[];
-    if(typeof selector==='string') dom=dom.concat(...document.querySelectorAll(selector))
-    else if(selector instanceof HTMLElement) dom=dom.concat(selector)
-    // 添加滚动条
-    for(let item of dom)if(item) scroll(item)
-    //代理滚动
-    function agent(E,x,y){
-        //根据scrollTop值更新滚动条
-        E.scrollLeft+=x
-        E.scrollTop+=y
-    }
-    function scroll(E){
-        E.addEventListener('wheel',function(e){
-            //判断滚动方向
-            if(e.deltaY>0)agent(E,0,+step)
-            else if(e.deltaY<0)agent(E,0,-step)
-        }, {passive:true})
-    }
-}
+// export function scroll(selector:any,step=20){
+//     // 获取DOM元素
+//     let dom:any[]=[];
+//     if(typeof selector==='string') dom=dom.concat(...document.querySelectorAll(selector))
+//     else if(selector instanceof HTMLElement) dom=dom.concat(selector)
+//     // 添加滚动条
+//     for(let item of dom)if(item) scroll(item)
+//     //代理滚动
+//     function agent(E:any,x:any,y:any){
+//         //根据scrollTop值更新滚动条
+//         E.scrollLeft+=x
+//         E.scrollTop+=y
+//     }
+//     function scroll(E){
+//         E.addEventListener('wheel',function(e){
+//             //判断滚动方向
+//             if(e.deltaY>0)agent(E,0,+step)
+//             else if(e.deltaY<0)agent(E,0,-step)
+//         }, {passive:true})
+//     }
+// }
 
     /****************************************************************************
      * color: string=black|Array --滚动条颜色,可以用渐变色,传递一个颜色数组即可
@@ -57,147 +57,147 @@ export function scroll(selector:any,step=20){
     *
     * ******************************************************************************************************/
     
-export function scrollbar(selector,{color='black',step=20}={}){
-    // 获取DOM元素
-    let dom:any[]=[];
-    if(typeof selector==='string') dom=dom.concat(...document.querySelectorAll(selector))
-    else if(selector instanceof HTMLElement) dom=dom.concat(selector)
-    else if(Array.isArray(selector))
-        for(let item of selector){
-            if(typeof item==='string')dom=dom.concat(...document.querySelectorAll(item))
-            else if(item instanceof HTMLElement)dom=dom.concat(item)
-        }
-    // 添加滚动条
-    for(let item of dom)if(item) scroll(item)
-    // E:HTMLElement
-    function scroll(E){
-        //预定义滚动条<div>和<style>
-        let data_css=`css${Math.random().toString().slice(2)}`
-        E.setAttribute('data-css',data_css)
-        E.style.overflow='hidden'
-        let position=window.getComputedStyle(E).position
-        if(position=='static') E.style.position='relative'
-        let div_y=document.createElement('div'),
-            div_x=document.createElement('div'),
-            style=document.createElement('style'),
-            id_y=Math.random().toString().replace('0.','y'),
-            id_x=Math.random().toString().replace('0.','x'),
-            style_id=Math.random().toString().replace('0.','s')
-        div_y.id=id_y
-        div_x.id=id_x
-        div_y.setAttribute('data-scroll','y')
-        div_x.setAttribute('data-scroll','x')
-        style.id=style_id
-        document.head.appendChild(style)
+// export function scrollbar(selector,{color='black',step=20}={}){
+//     // 获取DOM元素
+//     let dom:any[]=[];
+//     if(typeof selector==='string') dom=dom.concat(...document.querySelectorAll(selector))
+//     else if(selector instanceof HTMLElement) dom=dom.concat(selector)
+//     else if(Array.isArray(selector))
+//         for(let item of selector){
+//             if(typeof item==='string')dom=dom.concat(...document.querySelectorAll(item))
+//             else if(item instanceof HTMLElement)dom=dom.concat(item)
+//         }
+//     // 添加滚动条
+//     for(let item of dom)if(item) scroll(item)
+//     // E:HTMLElement
+//     function scroll(E){
+//         //预定义滚动条<div>和<style>
+//         let data_css=`css${Math.random().toString().slice(2)}`
+//         E.setAttribute('data-css',data_css)
+//         E.style.overflow='hidden'
+//         let position=window.getComputedStyle(E).position
+//         if(position=='static') E.style.position='relative'
+//         let div_y=document.createElement('div'),
+//             div_x=document.createElement('div'),
+//             style=document.createElement('style'),
+//             id_y=Math.random().toString().replace('0.','y'),
+//             id_x=Math.random().toString().replace('0.','x'),
+//             style_id=Math.random().toString().replace('0.','s')
+//         div_y.id=id_y
+//         div_x.id=id_x
+//         div_y.setAttribute('data-scroll','y')
+//         div_x.setAttribute('data-scroll','x')
+//         style.id=style_id
+//         document.head.appendChild(style)
 
-        //定义数据部分
-        let height_context,                     //容器内容高度
-            height_visible,                     //容器可视高度
-            width_context,                      //容器内容宽度
-            width_visible,                      //容器可视宽度
-            need_y,                             //是否需要纵向滚动条
-            need_x,                             //是否需要横向滚动条
-            scrollbar_width,                    //横向滚动条宽度
-            scrollbar_height,                   //纵向滚动条高度
-            scrollbar_size=5,                   //横向滚动条高度，或纵向滚动条的宽度
-            gap=2,                              //滚动条外边距
-            bg,                                 //滚动条背景
-            scrollbar_hover_size=6,             //悬浮时的宽度
-            max_y_s,                            //滚动条在可视区域内的垂直最大滑动范围
-            max_x_s,                            //滚动条在可视区域内水平最淡滑动距离
-            max_y,                              //纵向溢出内容长度.
-            max_x                               //横向溢出内容长度.
-        if(Array.isArray(color)) bg=`linear-gradient(45deg,${color.join(',')})`
-        else if (typeof color=='string')bg=color
-        else bg='black'
+//         //定义数据部分
+//         let height_context,                     //容器内容高度
+//             height_visible,                     //容器可视高度
+//             width_context,                      //容器内容宽度
+//             width_visible,                      //容器可视宽度
+//             need_y,                             //是否需要纵向滚动条
+//             need_x,                             //是否需要横向滚动条
+//             scrollbar_width,                    //横向滚动条宽度
+//             scrollbar_height,                   //纵向滚动条高度
+//             scrollbar_size=5,                   //横向滚动条高度，或纵向滚动条的宽度
+//             gap=2,                              //滚动条外边距
+//             bg,                                 //滚动条背景
+//             scrollbar_hover_size=6,             //悬浮时的宽度
+//             max_y_s,                            //滚动条在可视区域内的垂直最大滑动范围
+//             max_x_s,                            //滚动条在可视区域内水平最淡滑动距离
+//             max_y,                              //纵向溢出内容长度.
+//             max_x                               //横向溢出内容长度.
+//         if(Array.isArray(color)) bg=`linear-gradient(45deg,${color.join(',')})`
+//         else if (typeof color=='string')bg=color
+//         else bg='black'
 
-        function init(){
-            height_context=E.scrollHeight,
-            height_visible=E.clientHeight,
-            width_context=E.scrollWidth,
-            width_visible=E.clientWidth,
-            need_y=height_context-height_visible>5 ? true : false,
-            need_x=width_context-width_visible>10 ? true : false,
-            scrollbar_width=width_visible/width_context*width_visible,                                      //滚动条宽度
-            scrollbar_height=height_visible/height_context*height_visible,                                  //滚动条高度
-            max_y_s=height_visible-scrollbar_height-scrollbar_size-2*gap,                        //滚动条在可视区域内的垂直最大滑动距离
-            max_x_s=width_visible-scrollbar_width-scrollbar_size-2*gap,                          //滚动条在可视区域内水平最淡滑动距离
-            max_y=height_context-height_visible,                                                            //溢出内容的纵向最大值.
-            max_x=width_context-width_visible                                                             //溢出内容的横向最大值.
+//         function init(){
+//             height_context=E.scrollHeight,
+//             height_visible=E.clientHeight,
+//             width_context=E.scrollWidth,
+//             width_visible=E.clientWidth,
+//             need_y=height_context-height_visible>5 ? true : false,
+//             need_x=width_context-width_visible>10 ? true : false,
+//             scrollbar_width=width_visible/width_context*width_visible,                                      //滚动条宽度
+//             scrollbar_height=height_visible/height_context*height_visible,                                  //滚动条高度
+//             max_y_s=height_visible-scrollbar_height-scrollbar_size-2*gap,                        //滚动条在可视区域内的垂直最大滑动距离
+//             max_x_s=width_visible-scrollbar_width-scrollbar_size-2*gap,                          //滚动条在可视区域内水平最淡滑动距离
+//             max_y=height_context-height_visible,                                                            //溢出内容的纵向最大值.
+//             max_x=width_context-width_visible                                                             //溢出内容的横向最大值.
 
-            E.appendChild(div_y)
-            if(need_x)E.appendChild(div_x)
-            // transition:0.3s opacity;
-            style.textContent=`
-                #${id_y}{position:absolute;display:none;background:${bg}!important;right:${gap}px;top:${gap}px;width:${scrollbar_size+'px'};height:${scrollbar_height+'px'};border-radius:5px;z-index:auto;min-height:4px;padding:0px!important;margin:0px!important;cursor:pointer}
-                #${id_x}{position:absolute;display:none;background:${bg}!important;bottom:${gap}px;left:${gap}px;height:${scrollbar_size+'px'};width:${scrollbar_width+'px'};border-radius:5px;z-index:auto;min-width:4px;padding:0px!important;margin:0px!important;cursor:pointer}
-            `
-            div_x.style.top=(E.scrollTop+height_visible-scrollbar_size-gap)+'px'
-            div_y.style.top=(E.scrollTop*(max_y_s+max_y)/max_y+gap)+'px'
-            div_x.style.left=(E.scrollLeft*(max_x_s+max_x)/max_x+gap)+'px'
-            div_y.style.left=(E.scrollLeft+width_visible-scrollbar_size-gap)+'px'
-        }
-        init()
-        // x,y:number--表示水平和垂直滚动条的偏移量
-        function agent(x,y){
-            //根据scrollTop值更新滚动条
-            E.scrollLeft+=x
-            E.scrollTop+=y
-            div_x.style.top=(E.scrollTop+height_visible-scrollbar_size-gap)+'px'
-            div_y.style.top=(E.scrollTop*(max_y_s+max_y)/max_y+gap)+'px'
-            div_x.style.left=(E.scrollLeft*(max_x_s+max_x)/max_x+gap)+'px'
-            div_y.style.left=(E.scrollLeft+width_visible-scrollbar_size-gap)+'px'
-        }
-        E.addEventListener('wheel',function(e){
-            //判断滚动方向
-            if(e.deltaY>0)agent(0,+step)
-            else if(e.deltaY<0)agent(0,-step)
-            init()
-        }, {passive:true})
+//             E.appendChild(div_y)
+//             if(need_x)E.appendChild(div_x)
+//             // transition:0.3s opacity;
+//             style.textContent=`
+//                 #${id_y}{position:absolute;display:none;background:${bg}!important;right:${gap}px;top:${gap}px;width:${scrollbar_size+'px'};height:${scrollbar_height+'px'};border-radius:5px;z-index:auto;min-height:4px;padding:0px!important;margin:0px!important;cursor:pointer}
+//                 #${id_x}{position:absolute;display:none;background:${bg}!important;bottom:${gap}px;left:${gap}px;height:${scrollbar_size+'px'};width:${scrollbar_width+'px'};border-radius:5px;z-index:auto;min-width:4px;padding:0px!important;margin:0px!important;cursor:pointer}
+//             `
+//             div_x.style.top=(E.scrollTop+height_visible-scrollbar_size-gap)+'px'
+//             div_y.style.top=(E.scrollTop*(max_y_s+max_y)/max_y+gap)+'px'
+//             div_x.style.left=(E.scrollLeft*(max_x_s+max_x)/max_x+gap)+'px'
+//             div_y.style.left=(E.scrollLeft+width_visible-scrollbar_size-gap)+'px'
+//         }
+//         init()
+//         // x,y:number--表示水平和垂直滚动条的偏移量
+//         function agent(x,y){
+//             //根据scrollTop值更新滚动条
+//             E.scrollLeft+=x
+//             E.scrollTop+=y
+//             div_x.style.top=(E.scrollTop+height_visible-scrollbar_size-gap)+'px'
+//             div_y.style.top=(E.scrollTop*(max_y_s+max_y)/max_y+gap)+'px'
+//             div_x.style.left=(E.scrollLeft*(max_x_s+max_x)/max_x+gap)+'px'
+//             div_y.style.left=(E.scrollLeft+width_visible-scrollbar_size-gap)+'px'
+//         }
+//         E.addEventListener('wheel',function(e){
+//             //判断滚动方向
+//             if(e.deltaY>0)agent(0,+step)
+//             else if(e.deltaY<0)agent(0,-step)
+//             init()
+//         }, {passive:true})
 
-        let flag_y=false,
-            flag_x=false,
-            py:any=null,        //上一次落点的y坐标
-            px:any=null         //上一次落点的x坐标
-        document.body.addEventListener('mousemove',function(e){
-            if(e.buttons==1){
-                //如果落点在纵向滚动条上
-                if(!flag_y && e.target==div_y)flag_y=true,document.body.style.userSelect='none'
-                if(flag_y && py){
-                    div_y.style.display="inline-block"
-                    let offset_y=e.clientY-py,
-                        y=offset_y*max_y/max_y_s
-                    agent(0,y)
-                }
-                //如果落点在横向滚动条上
-                if(!flag_x && e.target==div_x)flag_x=true,document.body.style.userSelect='none'
-                if(flag_x && px){
-                    let offset_x=e.clientX-px,
-                        x=offset_x*max_x/max_x_s
-                    agent(x,0)
-                }
-                py=e.clientY,px=e.clientX
-            }
-            if(e.buttons==0){
-                flag_y=flag_x=false, py=px=null
-                document.body.style.userSelect='unset'
-            }
-        })
+//         let flag_y=false,
+//             flag_x=false,
+//             py:any=null,        //上一次落点的y坐标
+//             px:any=null         //上一次落点的x坐标
+//         document.body.addEventListener('mousemove',function(e){
+//             if(e.buttons==1){
+//                 //如果落点在纵向滚动条上
+//                 if(!flag_y && e.target==div_y)flag_y=true,document.body.style.userSelect='none'
+//                 if(flag_y && py){
+//                     div_y.style.display="inline-block"
+//                     let offset_y=e.clientY-py,
+//                         y=offset_y*max_y/max_y_s
+//                     agent(0,y)
+//                 }
+//                 //如果落点在横向滚动条上
+//                 if(!flag_x && e.target==div_x)flag_x=true,document.body.style.userSelect='none'
+//                 if(flag_x && px){
+//                     let offset_x=e.clientX-px,
+//                         x=offset_x*max_x/max_x_s
+//                     agent(x,0)
+//                 }
+//                 py=e.clientY,px=e.clientX
+//             }
+//             if(e.buttons==0){
+//                 flag_y=flag_x=false, py=px=null
+//                 document.body.style.userSelect='unset'
+//             }
+//         })
 
-        E.addEventListener('mousemove',function(){init()})
-        E.addEventListener('transitionend',function(){init()})      //容器伸缩后的自适应
-        E.addEventListener('animationend',function(){init()})       //容器伸缩后的自适应
-        E.addEventListener('mouseenter',function(){
-            div_x.style.display="none"
-            div_y.style.display="none"
-            setTimeout(()=>{
-                div_x.style.display="inline-block"
-                div_y.style.display="inline-block"
-            },0)
-        })
-        E.addEventListener('mouseleave',function(){
-            div_x.style.display="none"
-            div_y.style.display="none"
-        })
-    }
-}
+//         E.addEventListener('mousemove',function(){init()})
+//         E.addEventListener('transitionend',function(){init()})      //容器伸缩后的自适应
+//         E.addEventListener('animationend',function(){init()})       //容器伸缩后的自适应
+//         E.addEventListener('mouseenter',function(){
+//             div_x.style.display="none"
+//             div_y.style.display="none"
+//             setTimeout(()=>{
+//                 div_x.style.display="inline-block"
+//                 div_y.style.display="inline-block"
+//             },0)
+//         })
+//         E.addEventListener('mouseleave',function(){
+//             div_x.style.display="none"
+//             div_y.style.display="none"
+//         })
+//     }
+// }

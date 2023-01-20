@@ -1,2 +1,5 @@
-// use for test code
+export * from "./check"
+// export * from "./dom" 
+export * from "./functions"
+
 

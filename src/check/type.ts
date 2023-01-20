@@ -2,7 +2,7 @@
 //检测类
 export class Check{
     static israw(obj:object):boolean{
-        let T =typeof obj
+        let T:string =typeof obj
         if(T==="object" && obj===null)return true;
         else return T!=='function'
     }
@@ -13,7 +13,7 @@ export class Check{
     }
     
     static istype(obj:any, ...types:any[]):boolean{
-        let T
+        let T:any
         if(obj===null || obj===undefined)T=obj
         else T=(obj).constructor
         if(types.includes(T))return true;

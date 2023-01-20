@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "declaration": true,    
+        "outDir": "./dist",
+        "noImplicitAny": true,
+        "module": "es6",
+        "target":"ES5",
+        "sourceMap": true,
+        "removeComments": true,
+        "allowJs": true,
+        "strict": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "moduleResolution":"node"
+    }
+    
+}

@@ -2,7 +2,7 @@
 export class F{
     // 函数通知器,包装一个函数,返回新的函数,返回的函数可以通过首参数得知自己是否是最新被调用的
     static rope(func:Function){
-        let pointer
+        let pointer:symbol
         function f(...args:any[]){
             let tag=Symbol()
             pointer=tag

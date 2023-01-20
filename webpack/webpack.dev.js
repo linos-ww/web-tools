@@ -70,9 +70,9 @@ module.exports={
         }
     },
     resolve:{
-        // extensions:[".ts",".js",".vue","..."],
+        extensions:[".ts",".js",".vue","..."],
         // enforceExtension:true,  //强制书写扩展
-        // mainFiles: ['index'],
+        mainFiles: ['index'],
         alias: {
             // '@': path.join(__dirname, "src"),
             
