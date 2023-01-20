@@ -6,8 +6,10 @@
   "author": "linos <762117907@qq.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "webpack-dev-server --config ./webpack/webpack.dev.js",
-    "pro": "webpack --config ./webpack/webpack.pro.js"
+    "dev-js": "cross-env TYPE=js webpack-dev-server --config ./webpack/webpack.dev.js",
+    "dev-ts": "cross-env TYPE=ts webpack-dev-server --config ./webpack/webpack.dev.js",
+    "pro-js": "cross-env TYPE=js webpack --config ./webpack/webpack.pro.js",
+    "pro-ts": "cross-env TYPE=ts webpack --config ./webpack/webpack.pro.js"
   },
   "dependencies": {
     "@babel/core": "^7.20.5",
@@ -22,5 +24,11 @@
     "webpack-dev-server": "^4.11.1",
     "webpack-html-plugin": "^0.1.1",
     "webpackbar": "^5.0.2"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "lerna": "^6.4.1"
   }
 }

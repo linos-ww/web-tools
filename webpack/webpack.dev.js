@@ -4,9 +4,10 @@ const path=require("path")
 const webpack = require("webpack")
 const WebpackBar =require('webpackbar')
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
 module.exports={
     mode:"development",
-    entry:"./src/index.ts",
+    entry:process.env.TYPE=='js'?"./src/index.js":"./src/index.ts",
     output:{
         path:path.resolve(__dirname,"dist"),
         filename:"[name]-[id].js"
@@ -17,12 +18,12 @@ module.exports={
             test:/\.vue$/,
             use:'vue-loader'
         }, {
-            test:/.(tsx?)$/,
-            use:['ts-loader']
-        },{
             test:/\.css$/,
             use:['style-loader','css-loader']
         }, {
+            test:/\.tsx?/,
+            use:['ts-loader']
+        },{
             test:/\.(js|jsx|mjs)$/,
             use:['babel-loader'],exclude:/node_modules/
         }, {
@@ -61,6 +62,7 @@ module.exports={
         },
         proxy:{
             "/":{
+                // target:"http://101.201.141.76:8103",
                 // target:'http://localhost:5000',
                 // pathRewrite:{'^/api':''},
                 // changeOrigin:true
@@ -73,18 +75,22 @@ module.exports={
         // mainFiles: ['index'],
         alias: {
             // '@': path.join(__dirname, "src"),
+            
         }
     },
     plugins:[
         new MiniCssExtractPlugin(),
-        // new VueLoaderPlugin(),
+        new VueLoaderPlugin(),
         new WebpackBar(),
         new HtmlWebpackPlugin({
             filename:"index.html",              //输出文件名
             inject:true,                        //在temlate模板中注入脚本,
             template: "./src/index.html"        //模板文件
         }),
-        
+        // new webpack.ProvidePlugin({
+        //     process:"process/browser",
+        //     Buffer:["buffer","Buffer"]
+        // })
     ]
     
 }

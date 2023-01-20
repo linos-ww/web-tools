@@ -4,9 +4,10 @@ const path=require("path")
 const webpack = require("webpack")
 const WebpackBar =require('webpackbar')
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
 module.exports={
     mode:"production",
-    entry:"./src/index.js",
+    entry:process.env.TYPE=='js'?"./src/index.js":"./src/index.ts",
     output:{
         path:path.resolve(__dirname,"../dist"),
         chunkFilename:'[chunkFilename]-[hash].[ext]',
@@ -21,7 +22,7 @@ module.exports={
             test:/\.css$/,
             use:[MiniCssExtractPlugin.loader,'css-loader']
         },  {
-            test:/.(tsx?)$/,
+            test:/\.tsx?/,
             use:['ts-loader']
         },{
             test:/\.(js|jsx|mjs)$/,
@@ -74,7 +75,7 @@ module.exports={
         }
     },
     plugins:[
-        // new VueLoaderPlugin(),
+        new VueLoaderPlugin(),
         new MiniCssExtractPlugin({
             filename: 'css/[name].css',
         }),
@@ -84,10 +85,10 @@ module.exports={
             inject:true,                        //在temlate模板中注入脚本,
             template: "./src/index.html"        //模板文件
         }),
-        // new webpack.ProvidePlugin({
-        //     process:"process/browser",
-        //     Buffer:["buffer","Buffer"]
-        // })
+        new webpack.ProvidePlugin({
+            process:"process/browser",
+            Buffer:["buffer","Buffer"]
+        })
     ]
  
 }
