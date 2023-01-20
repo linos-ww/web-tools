@@ -1,8 +1,8 @@
 {
-  "name": "web-tools",
+  "name": "web-functions",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "git@github.com:linos-ww/web-tools.git",
+  "repository": "git@github.com:linos-ww/web-funcitons.git",
   "author": "linos <762117907@qq.com>",
   "license": "MIT",
   "scripts": {
