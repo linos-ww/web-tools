@@ -4,9 +4,10 @@ const path=require("path")
 const webpack = require("webpack")
 const WebpackBar =require('webpackbar')
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
 module.exports={
     mode:"development",
-    entry:"./src/index.ts",
+    entry:process.env.TYPE=='js'?"./src/index.js":"./src/index.ts",
     output:{
         path:path.resolve(__dirname,"dist"),
         filename:"[name]-[id].js"
@@ -20,7 +21,7 @@ module.exports={
             test:/\.css$/,
             use:['style-loader','css-loader']
         }, {
-            test:/\.(tsx?)$/,
+            test:/\.tsx?/,
             use:['ts-loader']
         },{
             test:/\.(js|jsx|mjs)$/,
@@ -69,9 +70,9 @@ module.exports={
         }
     },
     resolve:{
-        extensions:[".ts",".js",".vue","..."],
+        // extensions:[".ts",".js",".vue","..."],
         // enforceExtension:true,  //强制书写扩展
-        mainFiles: ['index'],
+        // mainFiles: ['index'],
         alias: {
             // '@': path.join(__dirname, "src"),
             

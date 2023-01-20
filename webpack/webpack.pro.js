@@ -4,9 +4,10 @@ const path=require("path")
 const webpack = require("webpack")
 const WebpackBar =require('webpackbar')
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
 module.exports={
     mode:"production",
-    entry:"./src/index.js",
+    entry:process.env.TYPE=='js'?"./src/index.js":"./src/index.ts",
     output:{
         path:path.resolve(__dirname,"../dist"),
         chunkFilename:'[chunkFilename]-[hash].[ext]',
@@ -20,8 +21,8 @@ module.exports={
         }, {
             test:/\.css$/,
             use:[MiniCssExtractPlugin.loader,'css-loader']
-        }, {
-            test:/\.(tsx?)$/,
+        },  {
+            test:/\.tsx?/,
             use:['ts-loader']
         },{
             test:/\.(js|jsx|mjs)$/,
