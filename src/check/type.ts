@@ -1,5 +1,4 @@
 
-//检测类
 export class Check{
     static israw(obj:object):boolean{
         let T:string =typeof obj
